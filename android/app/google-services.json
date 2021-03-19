@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "348169511846",
+    "project_id": "sostav-64ab4",
+    "storage_bucket": "sostav-64ab4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348169511846:android:bbfc6d04299a6acc176567",
+        "android_client_info": {
+          "package_name": "com.sostav"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348169511846-td06knosidt8gl1u85cdi5npgvnjhj5o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP4RT8RIk3xyuzoQXYS0zvv_nUtmEYz7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348169511846-td06knosidt8gl1u85cdi5npgvnjhj5o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

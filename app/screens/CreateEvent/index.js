@@ -12,11 +12,10 @@ import {
   Space,
   Button,
   Input,
-  Avatar,
+  TeammateItem,
   Header,
   Image,
   Text,
-  IconText,
 } from 'components';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as sizes from 'utils/sizes';
@@ -203,15 +202,11 @@ const Index = props => {
         keyExtractor={(item, index) => item.id}
         renderItem={item => {
           return (
-            <TouchableOpacity style={styles.teammate}>
-              <RNImage
-                source={item.item.avatar}
-                style={styles.teammateAvatar}
-              />
-              <Text center fontSize={sizes.font.small_a}>
-                {item.item.name}
-              </Text>
-            </TouchableOpacity>
+            <TeammateItem
+              avatar={item.item.avatar}
+              name={item.item.name}
+              onPress={() => {}}
+            />
           );
         }}
       />

@@ -22,6 +22,18 @@ import TeamEventsScreen from 'screens/TeamEvents';
 import CreateWhipRoundScreen from 'screens/CreateWhipRound';
 import TeamWhipRoundsScreen from 'screens/TeamWhipRounds';
 import OneWhipRoundScreen from 'screens/OneWhipRound';
+import EditWhipRoundScreen from 'screens/EditWhipRound';
+import CreateOpponentScreen from 'screens/CreateOpponent';
+import AfterCreateOpponentScreen from 'screens/AfterCreateOpponent';
+import OneEventScreen from 'screens/OneEvent';
+import MyTeamScreen from 'screens/MyTeam';
+import AddTeammateScreen from 'screens/AddTeammate';
+import AddTeammateCodeScreen from 'screens/AddTeammateCode';
+import MyTeammatesScreen from 'screens/MyTeammates';
+import MyTeammateProfileScreen from 'screens/MyTeammateProfile';
+import StatisticsScreen from 'screens/Statistics';
+import StatisticWithOneTeamScreen from 'screens/StatisticWithOneTeam';
+import OneStatisticScreen from 'screens/OneStatistic';
 import NotificationSettingsScreen from 'screens/NotificationSettings';
 
 //tab start
@@ -129,6 +141,66 @@ const Navigation = props => {
           <Stack.Screen
             name="OneWhipRoundScreen"
             component={OneWhipRoundScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="EditWhipRoundScreen"
+            component={EditWhipRoundScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="CreateOpponentScreen"
+            component={CreateOpponentScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="AfterCreateOpponentScreen"
+            component={AfterCreateOpponentScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="OneEventScreen"
+            component={OneEventScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="MyTeamScreen"
+            component={MyTeamScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="AddTeammateScreen"
+            component={AddTeammateScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="AddTeammateCodeScreen"
+            component={AddTeammateCodeScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="MyTeammatesScreen"
+            component={MyTeammatesScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="MyTeammateProfileScreen"
+            component={MyTeammateProfileScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="StatisticsScreen"
+            component={StatisticsScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="StatisticWithOneTeamScreen"
+            component={StatisticWithOneTeamScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="OneStatisticScreen"
+            component={OneStatisticScreen}
             options={{headerShown: false, gestureEnabled: false}}
           />
           <Stack.Screen

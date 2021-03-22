@@ -1,12 +1,18 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Text, Image, Header, Input, Space} from 'components';
+import {StyleSheet, TouchableOpacity, View, FlatList} from 'react-native';
+import {Text, Image, Header, Input, Space, ImageTextPlus} from 'components';
 import * as sizes from 'utils/sizes';
 import * as images from 'utils/images';
 import * as colors from 'utils/colors';
 
 const Index = props => {
   const [opponentTeamName, setOpponentTeamName] = React.useState('');
+  const data = [
+    {id: '1', name: 'Канадский стафф', avatar: images.images.team},
+    {id: '2', name: 'Арсенал', avatar: images.images.team},
+    {id: '3', name: 'Суприм', avatar: images.images.team},
+    {id: '4', name: 'Зенит', avatar: images.images.team},
+  ];
   return (
     <View style={styles.root}>
       <Header
@@ -34,7 +40,7 @@ const Index = props => {
           flexDirection: 'row',
           alignItems: 'center',
         }}
-        onPress={() => props.navigation.navigate('SelectOpponentScreen')}>
+        onPress={() => props.navigation.navigate('CreateOpponentScreen')}>
         <View
           style={{
             backgroundColor: colors.gray,
@@ -64,9 +70,15 @@ const Index = props => {
         </View>
       </TouchableOpacity>
       <Space height={20} />
-      <Text fontSize={sizes.font.large_a} fontColor={colors.darkBlue} bold>
+      <Text fontSize={sizes.font.large_a} bold>
         Последние соперники
       </Text>
+      <Space height={20} />
+      <FlatList
+        data={data}
+        keyExtractor={(item, index) => item.id}
+        renderItem={item => <ImageTextPlus name={item.item.name} />}
+      />
     </View>
   );
 };

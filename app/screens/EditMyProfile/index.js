@@ -84,7 +84,7 @@ const Index = props => {
       <Header
         title="Редактировать профиль"
         leftButtonSource={images.icons.left_arrow}
-        rightButtonSource={images.icons.edit}
+        rightButtonSource={images.icons.check}
         onLeftButtonPress={() => props.navigation.goBack()}
         onRightButtonPress={() => props.navigation.goBack()}
       />

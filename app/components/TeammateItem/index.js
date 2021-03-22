@@ -1,21 +1,14 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import {Text, Image} from 'components';
+import {StyleSheet, TouchableOpacity, Image as RNImage} from 'react-native';
+import {Text} from 'components';
 import * as sizes from 'utils/sizes';
-import * as images from 'utils/images';
-import * as colors from 'utils/colors';
 
 const Index = props => {
-  const {avatarSource, name, onPress = () => {}, selected} = props;
+  const {avatar, name, onPress = () => {}} = props;
   return (
     <TouchableOpacity style={styles.root} onPress={onPress}>
-      <Image
-        source={avatarSource}
-        circle
-        width={sizes.dimension.teammateItem.avatarSize}
-        height={sizes.dimension.teammateItem.avatarSize}
-      />
-      <Text fontColor={selected ? colors.main : colors.black} center>
+      <RNImage source={avatar} style={styles.teammateAvatar} />
+      <Text center fontSize={sizes.font.small_a}>
         {name}
       </Text>
     </TouchableOpacity>
@@ -23,7 +16,16 @@ const Index = props => {
 };
 
 const styles = StyleSheet.create({
-  root: {},
+  root: {
+    width: sizes.dimension.teammateItem.avatarSize,
+    marginRight: 20,
+  },
+
+  teammateAvatar: {
+    width: sizes.dimension.teammateItem.avatarSize,
+    height: sizes.dimension.teammateItem.avatarSize,
+    borderRadius: sizes.dimension.teammateItem.avatarBorderRadius,
+  },
 });
 
 export default Index;

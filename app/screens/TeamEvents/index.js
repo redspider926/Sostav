@@ -82,6 +82,7 @@ const Index = props => {
         data={data}
         renderItem={(item, rowMap) => (
           <Event
+            onPress={() => props.navigation.navigate('OneEventScreen')}
             eventName={item.item.eventName}
             eventOpponent={item.item.eventOpponent}
             description={item.item.description}

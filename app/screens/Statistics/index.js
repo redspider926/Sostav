@@ -1,33 +1,22 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {
-  Space,
-  Button,
-  Input,
-  TeamListItem,
-  Header,
-  Image,
-  Text,
-} from 'components';
+import {SwipeListView} from 'react-native-swipe-list-view';
+import Modal from 'react-native-modal';
+import {Space, TeamListItem, Header, Image, Text} from 'components';
+import themeStyle from 'utils/style';
 import * as sizes from 'utils/sizes';
 import * as images from 'utils/images';
 import * as colors from 'utils/colors';
-import themeStyle from 'utils/style';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import Modal from 'react-native-modal';
-
-import {SwipeListView} from 'react-native-swipe-list-view';
 
 const Index = props => {
-  const [code, setCode] = React.useState('');
   const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const refRBSheet = React.useRef();
+
   const data = [
     {
       id: '1',
       avatar: images.images.team,
       name: 'ЦСКА Москва',
-      accepted: false,
+      accepted: true,
     },
     {
       id: '2',
@@ -39,23 +28,48 @@ const Index = props => {
       id: '3',
       avatar: images.images.team,
       name: 'ЦСКА Москва',
-      accepted: false,
+      accepted: true,
     },
   ];
   return (
     <View style={styles.root}>
-      <Header title="Команды" leftButtonSource={images.icons.left_arrow} />
+      <Header title="Statistics" leftButtonSource={images.icons.left_arrow} />
       <Space height={20} />
-      <Text fontSize={sizes.font.middle_b}>
-        Создайте свою спортивную команду!
-      </Text>
-
+      <View style={styles.teamNumberInfo}>
+        <View>
+          <Text fontSize={sizes.font.middle_b} bold>
+            Выиграли
+          </Text>
+          <Text fontSize={sizes.font.small_b}>120 раз.</Text>
+        </View>
+        <View>
+          <Text fontSize={sizes.font.middle_b} bold>
+            Ничья
+          </Text>
+          <Text fontSize={sizes.font.small_b}>21 раз.</Text>
+        </View>
+        <View>
+          <Text fontSize={sizes.font.middle_b} bold>
+            Проиграли
+          </Text>
+          <Text fontSize={sizes.font.small_b}>16 раз..</Text>
+        </View>
+      </View>
+      <Space height={10} />
+      <View style={styles.progressA}>
+        <View style={styles.progressB}>
+          <View style={styles.progressC} />
+        </View>
+      </View>
+      <Space height={40} />
       <SwipeListView
         disableRightSwipe
         data={data}
         renderItem={(item, rowMap) => (
           <TeamListItem
-            onPress={() => props.navigation.navigate('MyTeamScreen')}
+            onPress={() =>
+              props.navigation.navigate('StatisticWithOneTeamScreen')
+            }
             avatar={item.item.avatar}
             name={item.item.name}
             accepted={item.item.accepted}
@@ -76,7 +90,6 @@ const Index = props => {
         }}
         rightOpenValue={-100}
       />
-
       <Modal
         useNativeDriverForBackdrop
         isVisible={isModalVisible}
@@ -113,55 +126,6 @@ const Index = props => {
           </View>
         </View>
       </Modal>
-
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => refRBSheet.current.open()}>
-        <Image source={images.icons.plus} icon tintColor={colors.white} />
-      </TouchableOpacity>
-
-      <RBSheet
-        ref={refRBSheet}
-        closeOnDragDown={true}
-        customStyles={{
-          container: {
-            justifyContent: 'space-between',
-            borderTopLeftRadius: sizes.dimension.bottomSheet.borderRadius,
-            borderTopRightRadius: sizes.dimension.bottomSheet.borderRadius,
-            height: 330,
-            padding: 20,
-          },
-          wrapper: {
-            backgroundColor: '#00000044',
-          },
-          draggableIcon: {
-            backgroundColor: '#000',
-          },
-        }}>
-        <Text>Введите ваш реферальный код для вступления в команду</Text>
-        <Input
-          editable
-          codeMask
-          placeholder="Введите реферальный код"
-          onChangeText={text => setCode(text)}
-          value={code}
-        />
-
-        <Button
-          caption="Ввести код"
-          borderColor={colors.main}
-          buttonColor={colors.white}
-          textColor={colors.black}
-        />
-
-        <Button
-          caption="Создать команду"
-          onPress={() => {
-            refRBSheet.current.close();
-            props.navigation.navigate('CreateTeamScreen');
-          }}
-        />
-      </RBSheet>
     </View>
   );
 };
@@ -172,18 +136,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: 'white',
-  },
-
-  addButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    width: sizes.dimension.button.height,
-    height: sizes.dimension.button.height,
-    borderRadius: sizes.dimension.button.height,
-    backgroundColor: colors.main,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   hiddenItem: {
@@ -202,6 +154,38 @@ const styles = StyleSheet.create({
     width: 100,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  teamNumberInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  progressA: {
+    height: 10,
+    borderRadius: 10,
+    width: '100%',
+    backgroundColor: colors.warning,
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  progressB: {
+    height: 10,
+    borderRadius: 10,
+    width: '90%',
+    backgroundColor: colors.yellow,
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  progressC: {
+    height: 10,
+    borderRadius: 10,
+    width: '80%',
+    backgroundColor: colors.main,
+    display: 'flex',
+    flexDirection: 'row',
   },
 });
 

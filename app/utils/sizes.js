@@ -74,7 +74,7 @@ export const dimension = {
   },
 
   teammateItem: {
-    avatarSize: 60,
+    avatarSize: 56,
     avatarBorderRadius: 30,
   },
 

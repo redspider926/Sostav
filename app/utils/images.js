@@ -9,6 +9,12 @@ export const icons = {
   event: require('assets/images/icon_event.png'),
   chat: require('assets/images/icon_chat.png'),
   edit: require('assets/images/icon_edit.png'),
+  more: require('assets/images/icon_more.png'),
+  check: require('assets/images/icon_check.png'),
+  paste: require('assets/images/icon_paste.png'),
+  phone: require('assets/images/icon_phone.png'),
+  email: require('assets/images/icon_email.png'),
+  contact: require('assets/images/icon_contact.png'),
 };
 
 export const images = {

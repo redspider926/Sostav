@@ -14,6 +14,7 @@ import {
   Image,
   Input,
   Button,
+  TeamListItem,
 } from 'components';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import * as sizes from 'utils/sizes';
@@ -28,61 +29,59 @@ const Index = props => {
     {id: '4', name: 'Пётр Отбивалкин', avatar: images.images.team},
     {id: '5', name: 'Пётр Отбивалкин', avatar: images.images.team},
   ];
-  const [addedMoney, setAddedMoney] = React.useState('');
   const refRBSheet = React.useRef();
-  const refRBSheet_1 = React.useRef();
   return (
     <View style={styles.root}>
       <Header
-        title="Сбор"
+        title="Событие"
         leftButtonSource={images.icons.left_arrow}
         rightButtonSource={images.icons.more}
         onLeftButtonPress={() => props.navigation.goBack()}
         onRightButtonPress={() => {
-          refRBSheet_1.current.open();
+          refRBSheet.current.open();
         }}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Space height={20} />
         <Text fontSize={sizes.font.middle_b} bold>
-          Цель
+          Название
         </Text>
+        <Space height={10} />
+        <Text>Сбор на новые ворота</Text>
         <Space height={20} />
-        <Text>
-          С другой стороны консультация с широким активом позволяет оценить
-          значение соответствующий условий активизации.
+        <Text fontSize={sizes.font.middle_b} bold>
+          Место
         </Text>
+        <Space height={10} />
+        <Text>г. Москва, ул. Тверская, д.1, стр1</Text>
 
-        <Space height={40} />
-        <View style={styles.group1}>
-          <Text fontSize={sizes.font.middle_b} bold>
-            Цель
-          </Text>
-          <Text>16 000 руб.</Text>
-          <View style={styles.progress}>
-            <View
-              style={[
-                styles.progress,
-                {width: '70%', backgroundColor: colors.main},
-              ]}
-            />
-          </View>
-        </View>
+        <Space height={20} />
+
+        {/* insert map here */}
+        <View style={{height: 180, backgroundColor: colors.gray}}></View>
+
+        <Space height={20} />
+        <Button caption="Проложить маршрут" />
         <Space height={20} />
         <View style={styles.group2}>
           <View style={{flex: 1}}>
             <Text fontSize={sizes.font.middle_b} bold>
-              Сумма
-            </Text>
-            <Text>32 000 руб.</Text>
-          </View>
-          <View style={{flex: 1}}>
-            <Text fontSize={sizes.font.middle_b} bold>
-              Дедлайн
+              Дата
             </Text>
             <Text>22.06.20</Text>
           </View>
+          <View style={{flex: 1}}>
+            <Text fontSize={sizes.font.middle_b} bold>
+              Время
+            </Text>
+            <Text>12:33</Text>
+          </View>
         </View>
+        <Space height={40} />
+        <Text fontSize={sizes.font.large_a} bold>
+          Ваш соперник
+        </Text>
+        <TeamListItem name="ЦСКА Москва" avatar={images.images.team} />
         <Space height={40} />
         <Text fontSize={sizes.font.large_a} bold>
           Список участников
@@ -106,7 +105,7 @@ const Index = props => {
         />
         <Space height={40} />
         <Text fontSize={sizes.font.large_a} bold>
-          Описание
+          Название / описание
         </Text>
         <Space height={10} />
         <Text>
@@ -116,65 +115,10 @@ const Index = props => {
           потребностям.
         </Text>
         <Space height={40} />
-        <View style={{alignSelf: 'flex-end'}}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              refRBSheet.current.open();
-            }}>
-            <Text bold>Внести</Text>
-            <Space width={10} />
-            <View style={styles.buttonPlusPart}>
-              <Image source={images.icons.plus} icon tintColor={colors.white} />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <Space height={70} />
       </ScrollView>
+
       <RBSheet
         ref={refRBSheet}
-        closeOnDragDown={true}
-        customStyles={{
-          container: {
-            justifyContent: 'space-between',
-            borderTopLeftRadius: sizes.dimension.bottomSheet.borderRadius,
-            borderTopRightRadius: sizes.dimension.bottomSheet.borderRadius,
-            padding: 20,
-            height: 300,
-          },
-          wrapper: {
-            backgroundColor: '#00000044',
-          },
-          draggableIcon: {
-            backgroundColor: '#000',
-          },
-        }}>
-        <View style={styles.teamTitleInSheet}>
-          <Image source={images.images.team} width={56} height={56} circle />
-          <Space width={20} />
-          <Text fontSize={sizes.font.middle_b} bold>
-            Иван Пупкин
-          </Text>
-        </View>
-        <Text>Введите сумму игрока</Text>
-        <Input
-          editable
-          codeMask
-          placeholder="Введите сумму"
-          onChangeText={text => setAddedMoney(text)}
-          value={addedMoney}
-        />
-
-        <Button
-          caption="Добавить сумму"
-          buttonColor={colors.main}
-          textColor={colors.white}
-        />
-      </RBSheet>
-
-      <RBSheet
-        ref={refRBSheet_1}
         closeOnDragDown={true}
         customStyles={{
           container: {
@@ -193,12 +137,12 @@ const Index = props => {
         <Space flex={1} />
         <TouchableOpacity
           onPress={() => {
-            refRBSheet_1.current.close();
+            refRBSheet.current.close();
             props.navigation.navigate('EditWhipRoundScreen');
           }}>
           <Space height={15} />
           <Text fontSize={sizes.font.large_a} fontColor={colors.main}>
-            Изменить
+            Добавить в календарь
           </Text>
           <Space height={15} />
         </TouchableOpacity>
@@ -206,7 +150,7 @@ const Index = props => {
         <TouchableOpacity>
           <Space height={15} />
           <Text fontSize={sizes.font.large_a} fontColor={colors.main}>
-            Завершить
+            Редактировать
           </Text>
           <Space height={15} />
         </TouchableOpacity>
@@ -214,7 +158,7 @@ const Index = props => {
         <TouchableOpacity>
           <Space height={15} />
           <Text fontSize={sizes.font.large_a} fontColor={colors.warning}>
-            Удалить
+            Отказаться от участия
           </Text>
           <Space height={15} />
         </TouchableOpacity>

@@ -1,6 +1,7 @@
 export const main = '#00DB4B';
 export const darkBlue = '#001E5B';
 export const warning = '#FF6240';
+export const yellow = '#FFE81B';
 export const white = '#FFFFFF';
 export const gray = '#F4F4F4';
 export const darkGray = '#888888';

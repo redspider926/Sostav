@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, ActivityIndicator} from 'react-native';
-import {Logo, Text, Space, Button, Input} from 'components';
+import {Logo, Text, Space, Button, Input, Loading} from 'components';
 import * as sizes from 'utils/sizes';
 import * as images from 'utils/images';
 import * as colors from 'utils/colors';
@@ -91,11 +91,7 @@ const Index = props => {
       </Text>
       <Space flex={1} />
       <Button onPress={onAuthButton} />
-      {loadingState && (
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color={colors.main} />
-        </View>
-      )}
+      {loadingState && <Loading />}
     </View>
   );
 };
@@ -108,14 +104,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: 'white',
-  },
-
-  loading: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 
   toast: {

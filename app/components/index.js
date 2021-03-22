@@ -17,6 +17,7 @@ import TeamItem from './TeamItem';
 import Title from './Title';
 import Statistic from './Statistic';
 import Switch from './Switch';
+import Loading from './Loading';
 
 export {
   Logo,
@@ -38,4 +39,5 @@ export {
   Title,
   Statistic,
   Switch,
+  Loading,
 };

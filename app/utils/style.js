@@ -31,4 +31,25 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+  //avatar modal
+  avatarModalContainer: {
+    width: '100%',
+    height: 100,
+    backgroundColor: colors.main,
+    borderRadius: 10,
+    justifyContent: 'space-around',
+    padding: sizes.dimension.screen.padding,
+    display: 'flex',
+    flexDirection: 'row',
+  },
+
+  avatarModalButton: {
+    width: sizes.dimension.button.height,
+    height: sizes.dimension.button.height,
+    borderRadius: 5,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

@@ -57,7 +57,7 @@ const Navigation = props => {
   return (
     <>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="TabNav">
+        <Stack.Navigator initialRouteName="AuthenticationScreen">
           <Stack.Screen
             name="ComponentTestScreen"
             component={ComponentTestScreen}

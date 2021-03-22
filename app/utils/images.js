@@ -15,6 +15,8 @@ export const icons = {
   phone: require('assets/images/icon_phone.png'),
   email: require('assets/images/icon_email.png'),
   contact: require('assets/images/icon_contact.png'),
+  camera: require('assets/images/icon_camera.png'),
+  image: require('assets/images/icon_image.png'),
 };
 
 export const images = {

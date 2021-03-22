@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text as RNText,
-  Keyboard,
-  ActivityIndicator,
-} from 'react-native';
-import {Text, Space, Button} from 'components';
+import {StyleSheet, View, Text as RNText, Keyboard} from 'react-native';
+import {Text, Space, Button, Loading} from 'components';
 import * as sizes from 'utils/sizes';
 import * as colors from 'utils/colors';
 
@@ -30,7 +24,6 @@ const Index = props => {
   const [loadingState, setLoadingState] = React.useState(false);
   const CELL_COUNT = 6;
   React.useEffect(() => {
-    console.log('code', code);
     if (code.length === 6) {
       Keyboard.dismiss();
       setLoadingState(true);
@@ -48,7 +41,11 @@ const Index = props => {
     try {
       await confirmation.confirm(code);
       setLoadingState(false);
-      props.navigation.navigate('RegisterScreen');
+      if (auth().currentUser.displayName !== null) {
+        props.navigation.navigate('TabNav');
+      } else {
+        props.navigation.navigate('RegisterScreen');
+      }
     } catch (error) {
       setLoadingState(false);
       Toast.show({
@@ -104,11 +101,7 @@ const Index = props => {
       </Text>
       <Space height={20} />
       <Button caption="Отправить код повторно" />
-      {loadingState && (
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color={colors.main} />
-        </View>
-      )}
+      {loadingState && <Loading />}
     </View>
   );
 };

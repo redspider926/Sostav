@@ -81,7 +81,7 @@ const Index = props => {
   async function registerAvatar(teamId) {
     var imageRef = storage().ref('/Users').child(teamId);
     let avatar =
-      'https://firebasestorage.googleapis.com/v0/b/sostav-64ab4.appspot.com/o/avatar.jpg?alt=media&token=b65b4f4e-2ce8-491c-a6dc-8d642bd7487c';
+      'https://firebasestorage.googleapis.com/v0/b/sostav-64ab4.appspot.com/o/Default%2Fteam.jpg?alt=media&token=64bbb8d9-2796-4842-8f42-e7fdd24200ac';
     if (uri) {
       await imageRef
         .putFile(uri)

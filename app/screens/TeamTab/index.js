@@ -33,39 +33,41 @@ const Index = props => {
     <View style={styles.root}>
       <Header title="Команды" leftButtonSource={images.icons.left_arrow} />
       <Space height={20} />
-      <Text fontSize={sizes.font.middle_b}>
-        Создайте свою спортивную команду!
-      </Text>
-
-      <SwipeListView
-        disableRightSwipe
-        data={props.teams}
-        renderItem={({item}) => (
-          <TeamListItem
-            onPress={() =>
-              props.navigation.navigate('MyTeamScreen', {team: item})
-            }
-            avatar={{uri: item.avatar}}
-            name={item.name}
-            accepted={item.users[props.auth.user.id].accepted}
-          />
-        )}
-        renderHiddenItem={({item}) => {
-          return (
-            item.users[userId].accepted &&
-            item.users[userId].role === 0 && (
-              <View style={styles.hiddenItem}>
-                <TouchableOpacity
-                  style={styles.hiddenButton}
-                  onPress={() => setIsModalVisible(true)}>
-                  <Text fontColor={colors.white}>Удалить</Text>
-                </TouchableOpacity>
-              </View>
-            )
-          );
-        }}
-        rightOpenValue={-100}
-      />
+      {props.teams.length > 0 ? (
+        <SwipeListView
+          disableRightSwipe
+          data={props.teams}
+          renderItem={({item}) => (
+            <TeamListItem
+              onPress={() =>
+                props.navigation.navigate('MyTeamScreen', {team: item})
+              }
+              avatar={{uri: item.avatar}}
+              name={item.name}
+              accepted={item.users[props.auth.user.id].accepted}
+            />
+          )}
+          renderHiddenItem={({item}) => {
+            return (
+              item.users[userId].accepted &&
+              item.users[userId].role === 0 && (
+                <View style={styles.hiddenItem}>
+                  <TouchableOpacity
+                    style={styles.hiddenButton}
+                    onPress={() => setIsModalVisible(true)}>
+                    <Text fontColor={colors.white}>Удалить</Text>
+                  </TouchableOpacity>
+                </View>
+              )
+            );
+          }}
+          rightOpenValue={-100}
+        />
+      ) : (
+        <Text fontSize={sizes.font.middle_b}>
+          Создайте свою спортивную команду!
+        </Text>
+      )}
 
       <Modal
         useNativeDriverForBackdrop

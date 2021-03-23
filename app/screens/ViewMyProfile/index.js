@@ -1,15 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
-import {
-  Space,
-  Button,
-  Input,
-  Avatar,
-  Header,
-  Image,
-  Text,
-  IconText,
-} from 'components';
+import {Space, Header, Image, Text} from 'components';
 import * as sizes from 'utils/sizes';
 import * as images from 'utils/images';
 import * as colors from 'utils/colors';
@@ -68,7 +59,7 @@ const Index = props => {
       <Text fontSize={sizes.font.middle_a} fontColor={colors.darkBlue} bold>
         День рождения
       </Text>
-      <Text>{changeToMaskedDate(user.birthday)}</Text>
+      <Text>{changeToMaskedDate(new Date(user.birthday))}</Text>
     </View>
   );
 };

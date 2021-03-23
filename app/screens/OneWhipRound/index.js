@@ -31,6 +31,9 @@ const Index = props => {
   const [addedMoney, setAddedMoney] = React.useState('');
   const refRBSheet = React.useRef();
   const refRBSheet_1 = React.useRef();
+
+  const {team} = props.route.params;
+
   return (
     <View style={styles.root}>
       <Header
@@ -91,7 +94,7 @@ const Index = props => {
 
         <FlatList
           horizontal={true}
-          data={data}
+          data={team.users}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => item.id}
           renderItem={item => {

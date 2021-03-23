@@ -33,7 +33,7 @@ const Index = props => {
         <Space width={10} />
         <View>
           <Text bold fontSize={sizes.font.large_a}>
-            {user.name}
+            {user.firstName + ' ' + user.lastName}
           </Text>
         </View>
       </TouchableOpacity>

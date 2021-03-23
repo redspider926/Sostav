@@ -2,9 +2,14 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, Image as RNImage} from 'react-native';
 import {Text} from 'components';
 import * as sizes from 'utils/sizes';
+import * as images from 'utils/images';
 
 const Index = props => {
-  const {avatar, name, onPress = () => {}} = props;
+  const {
+    avatar = images.images.team,
+    name = 'Elena',
+    onPress = () => {},
+  } = props;
   return (
     <TouchableOpacity style={styles.root} onPress={onPress}>
       <RNImage source={avatar} style={styles.teammateAvatar} />

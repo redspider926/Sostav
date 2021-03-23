@@ -10,6 +10,7 @@ import Modal from 'react-native-modal';
 import {SwipeListView} from 'react-native-swipe-list-view';
 
 const Index = props => {
+  const {team} = props.route.params;
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const data = [
     {
@@ -141,7 +142,9 @@ const Index = props => {
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => props.navigation.navigate('CreateWhipRoundScreen')}>
+        onPress={() =>
+          props.navigation.navigate('CreateWhipRoundScreen', {team: team})
+        }>
         <Image source={images.icons.plus} icon tintColor={colors.white} />
       </TouchableOpacity>
     </View>

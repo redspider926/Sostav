@@ -16,7 +16,6 @@ const Index = props => {
     <View style={styles.root}>
       <Header title="События" leftButtonSource={images.icons.left_arrow} />
       <Space height={20} />
-      <Text fontSize={sizes.font.middle_b}>Создайте событие</Text>
       <FlatList
         data={props.teams.filter(team => team.users[userId].accepted === true)}
         keyExtractor={(item, index) => item.id}

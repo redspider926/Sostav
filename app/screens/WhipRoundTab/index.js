@@ -5,28 +5,12 @@ import * as sizes from 'utils/sizes';
 import * as images from 'utils/images';
 import * as colors from 'utils/colors';
 
-const Index = props => {
-  const data = [
-    {
-      id: '1',
-      avatar: images.images.team,
-      name: 'ЦСКА Москва',
-      accepted: true,
-    },
-    {
-      id: '2',
-      avatar: images.images.team,
-      name: 'ЦСКА Москва',
-      accepted: true,
-    },
-    {
-      id: '3',
-      avatar: images.images.team,
-      name: 'ЦСКА Москва',
-      accepted: true,
-    },
-  ];
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
+const Index = props => {
+  const userId = props.auth.user.id;
   return (
     <View style={styles.root}>
       <Header
@@ -36,14 +20,13 @@ const Index = props => {
       <Space height={20} />
       <Text fontSize={sizes.font.middle_b}>Создайте событие</Text>
       <FlatList
-        data={data}
+        data={props.teams.filter(team => team.users[userId].accepted === true)}
         keyExtractor={(item, index) => item.id}
-        renderItem={item => (
+        renderItem={({item}) => (
           <TeamListItem
             onPress={() => props.navigation.navigate('TeamWhipRoundsScreen')}
-            avatar={item.item.avatar}
-            name={item.item.name}
-            accepted={item.item.accepted}
+            avatar={{uri: item.avatar}}
+            name={item.name}
           />
         )}
       />
@@ -60,4 +43,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+const mapStateToProps = state => {
+  return {auth: state.auth, teams: state.teams};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

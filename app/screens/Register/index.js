@@ -20,6 +20,10 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 const Index = props => {
   const [uri, setUri] = React.useState('');
   const [lastName, setLastName] = React.useState('');
@@ -75,9 +79,10 @@ const Index = props => {
     await firestore()
       .collection('Users')
       .add(user)
-      .then(() => {
+      .then(async () => {
         console.log('User was successfully registered!');
-        props.navigation.navigate('TabNav');
+        await props.authActions.register(user);
+        props.navigation.navigate('LoadingScreen');
       })
       .catch(() => {
         console.log('User register operation was failed!');
@@ -264,4 +269,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+const mapStateToProps = state => {
+  return {auth: state.auth};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

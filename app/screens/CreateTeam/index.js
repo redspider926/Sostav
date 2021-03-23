@@ -15,11 +15,50 @@ import auth from '@react-native-firebase/auth';
 
 import uuid from 'react-native-uuid';
 
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 const Index = props => {
   const [uri, setUri] = React.useState('');
   const [teamName, setTeamName] = React.useState('');
-  const myRole = null;
-  const teamType = null;
+
+  const userId = props.auth.user.id;
+
+  const myRoles = [
+    'Администратор',
+    'Тренер',
+    'Капитан',
+    'Кассир',
+    'Игрок',
+    'Гость',
+  ];
+
+  const myTeamTypes = [
+    'Футбол',
+    'Воллейбол',
+    'Баскетбол',
+    'Хоккей',
+    'Единоборства',
+  ];
+
+  let myRoleNumber = null;
+  if (props.route.params !== undefined) {
+    if (props.route.params.roleNumber !== undefined) {
+      myRoleNumber = props.route.params.roleNumber;
+    }
+  }
+
+  let myTeamTypeNumber = null;
+  if (props.route.params !== undefined) {
+    if (props.route.params.teamTypeNumber !== undefined) {
+      myTeamTypeNumber = props.route.params.teamTypeNumber;
+    }
+  }
+
+  const myRoleText = myRoleNumber === null ? null : myRoles[myRoleNumber];
+  const myTeamTypeText =
+    myTeamTypeNumber === null ? null : myTeamTypes[myTeamTypeNumber];
 
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   //loading
@@ -28,11 +67,11 @@ const Index = props => {
   const registerTeam = async () => {
     let errorMessage = '';
 
-    if (teamType === null) {
+    if (myTeamTypeText === null) {
       errorMessage = 'You should choose team type';
     }
 
-    if (myRole === null) {
+    if (myRoleText === null) {
       errorMessage = 'You should choose your rold in new team';
     }
 
@@ -40,7 +79,7 @@ const Index = props => {
       errorMessage = 'You should input firstName';
     }
 
-    if (!teamName || myRole === null || !teamType === null) {
+    if (!teamName || myRoleText === null || !myTeamTypeText === null) {
       Toast.show({
         type: 'error',
         position: 'top',
@@ -56,12 +95,18 @@ const Index = props => {
 
     setLoadingState(true);
     const avatar = await registerAvatar(teamId);
-    console.log('avatar', avatar);
     const team = {
       id: teamId,
+      code: teamId.slice(0, 6),
       name: teamName,
       avatar: avatar,
-      type: teamType,
+      type: myTeamTypeNumber,
+      users: {
+        [userId]: {
+          accepted: true,
+          role: myRoleNumber,
+        },
+      },
     };
 
     await firestore()
@@ -162,18 +207,22 @@ const Index = props => {
         <Input
           title="Моя роль в команде"
           placeholder="Администратор, тренер или капитан"
-          value=""
+          value={myRoleText}
           onPress={() => {
-            props.navigation.navigate('SelectRoleScreen');
+            props.navigation.navigate('SelectRoleScreen', {
+              roleNumber: myRoleNumber,
+            });
           }}
         />
         <Space height={20} />
         <Input
           title="Вид спорта"
           placeholder="Выберите вид вашего спорта"
-          value=""
+          value={myTeamTypeText}
           onPress={() => {
-            props.navigation.navigate('SelectTypeScreen');
+            props.navigation.navigate('SelectTypeScreen', {
+              teamTypeNumber: myTeamTypeNumber,
+            });
           }}
         />
       </ScrollView>
@@ -227,4 +276,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+const mapStateToProps = state => {
+  return {auth: state.auth, teams: state.teams};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

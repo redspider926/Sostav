@@ -34,6 +34,7 @@ import MyTeammateProfileScreen from 'screens/MyTeammateProfile';
 import StatisticsScreen from 'screens/Statistics';
 import StatisticWithOneTeamScreen from 'screens/StatisticWithOneTeam';
 import OneStatisticScreen from 'screens/OneStatistic';
+import LoadingScreen from 'screens/Loading';
 import NotificationSettingsScreen from 'screens/NotificationSettings';
 
 //tab start
@@ -201,6 +202,11 @@ const Navigation = props => {
           <Stack.Screen
             name="OneStatisticScreen"
             component={OneStatisticScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          />
+          <Stack.Screen
+            name="LoadingScreen"
+            component={LoadingScreen}
             options={{headerShown: false, gestureEnabled: false}}
           />
           <Stack.Screen

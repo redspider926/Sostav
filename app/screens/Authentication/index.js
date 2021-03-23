@@ -17,6 +17,10 @@ const Index = props => {
   const [code, setCode] = React.useState('');
   const [loadingState, setLoadingState] = React.useState(false);
 
+  if (props.auth.isAuth) {
+    props.navigation.navigate('LoadingScreen');
+  }
+
   const getRealPhoneNumberString = phoneNumber => {
     let str = '+';
     for (let _index in phoneNumber) {

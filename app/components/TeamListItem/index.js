@@ -9,7 +9,12 @@ import * as colors from 'utils/colors';
 import * as images from 'utils/images';
 
 const Index = props => {
-  const {avatar, name, accepted = true, onPress} = props;
+  const {
+    avatar = images.images.team,
+    name = 'ЦСКА Москва',
+    accepted = true,
+    onPress,
+  } = props;
   return (
     <>
       {accepted ? (

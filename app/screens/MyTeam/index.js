@@ -1,5 +1,11 @@
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 import {
   Image,
   Text,
@@ -14,9 +20,14 @@ import {
 import * as images from 'utils/images';
 import * as colors from 'utils/colors';
 import * as sizes from 'utils/sizes';
-import {ScrollView} from 'react-native-gesture-handler';
+
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 const Index = props => {
+  const team = props.route.params.team;
+
   const data = [
     {id: '1', name: 'Пётр Отбивалкин', avatar: images.images.team},
     {id: '2', name: 'Пётр Отбивалкин', avatar: images.images.team},
@@ -37,18 +48,18 @@ const Index = props => {
         <Space height={20} />
         <View style={styles.team}>
           <Image
-            source={images.images.team}
+            source={{uri: team.avatar}}
             width={sizes.dimension.teamListItem.image.width}
             height={sizes.dimension.teamListItem.image.height}
           />
           <Space width={10} />
           <Text fontSize={sizes.font.large_a} bold>
-            ЦСКА Москва
+            {team.name}
           </Text>
         </View>
 
         <Space height={20} />
-        <TeamCode />
+        <TeamCode code={team.code} />
         <Space height={20} />
         <TouchableOpacity
           onPress={() => props.navigation.navigate('StatisticsScreen')}>
@@ -199,4 +210,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+const mapStateToProps = state => {
+  return {auth: state.auth, teams: state.teams};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

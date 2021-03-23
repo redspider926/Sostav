@@ -8,13 +8,14 @@ import * as colors from 'utils/colors';
 import * as images from 'utils/images';
 
 const Index = props => {
+  const {code} = props;
   return (
     <View style={styles.root}>
       <Text fontSize={sizes.font.middle_b}>Скопируйте код приглашения</Text>
       <Space height={20} />
       <View style={styles.code}>
         <Text fontSize={sizes.font.largest_a} fontColor={colors.main}>
-          173ky93
+          {code}
         </Text>
         <TouchableOpacity>
           <Image

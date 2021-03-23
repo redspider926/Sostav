@@ -18,30 +18,17 @@ import Modal from 'react-native-modal';
 
 import {SwipeListView} from 'react-native-swipe-list-view';
 
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 const Index = props => {
   const [code, setCode] = React.useState('');
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const refRBSheet = React.useRef();
-  const data = [
-    {
-      id: '1',
-      avatar: images.images.team,
-      name: 'ЦСКА Москва',
-      accepted: false,
-    },
-    {
-      id: '2',
-      avatar: images.images.team,
-      name: 'ЦСКА Москва',
-      accepted: true,
-    },
-    {
-      id: '3',
-      avatar: images.images.team,
-      name: 'ЦСКА Москва',
-      accepted: false,
-    },
-  ];
+
+  const userId = props.auth.user.id;
+
   return (
     <View style={styles.root}>
       <Header title="Команды" leftButtonSource={images.icons.left_arrow} />
@@ -52,18 +39,21 @@ const Index = props => {
 
       <SwipeListView
         disableRightSwipe
-        data={data}
-        renderItem={(item, rowMap) => (
+        data={props.teams}
+        renderItem={({item}) => (
           <TeamListItem
-            onPress={() => props.navigation.navigate('MyTeamScreen')}
-            avatar={item.item.avatar}
-            name={item.item.name}
-            accepted={item.item.accepted}
+            onPress={() =>
+              props.navigation.navigate('MyTeamScreen', {team: item})
+            }
+            avatar={{uri: item.avatar}}
+            name={item.name}
+            accepted={item.users[props.auth.user.id].accepted}
           />
         )}
-        renderHiddenItem={(item, rowMap) => {
+        renderHiddenItem={({item}) => {
           return (
-            item.item.accepted && (
+            item.users[userId].accepted &&
+            item.users[userId].role === 0 && (
               <View style={styles.hiddenItem}>
                 <TouchableOpacity
                   style={styles.hiddenButton}
@@ -205,4 +195,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+const mapStateToProps = state => {
+  return {auth: state.auth, teams: state.teams};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

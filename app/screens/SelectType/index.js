@@ -5,6 +5,19 @@ import * as sizes from 'utils/sizes';
 import * as images from 'utils/images';
 
 const Index = props => {
+  const [teamType, setTeamType] = React.useState(
+    props.route.params.teamTypeNumber === null
+      ? 0
+      : props.route.params.roleNumber,
+  );
+
+  const selectTeamType = _teamType => {
+    setTeamType(_teamType);
+    props.navigation.navigate('CreateTeamScreen', {
+      teamTypeNumber: _teamType,
+    });
+  };
+
   return (
     <View style={styles.root}>
       <Header
@@ -17,12 +30,37 @@ const Index = props => {
         imageSource={images.icons.plus}
         title="Футбол"
         option
-        selected
+        selected={teamType === 0}
+        onPress={() => selectTeamType(0)}
       />
-      <IconText imageSource={images.icons.plus} title="Воллейбол" />
-      <IconText imageSource={images.icons.plus} title="Баскетбол" />
-      <IconText imageSource={images.icons.plus} title="Хоккей" />
-      <IconText imageSource={images.icons.plus} title="Единоборства" />
+      <IconText
+        imageSource={images.icons.plus}
+        title="Воллейбол"
+        option
+        selected={teamType === 1}
+        onPress={() => selectTeamType(1)}
+      />
+      <IconText
+        imageSource={images.icons.plus}
+        title="Баскетбол"
+        option
+        selected={teamType === 2}
+        onPress={() => selectTeamType(2)}
+      />
+      <IconText
+        imageSource={images.icons.plus}
+        title="Хоккей"
+        option
+        selected={teamType === 3}
+        onPress={() => selectTeamType(3)}
+      />
+      <IconText
+        imageSource={images.icons.plus}
+        title="Единоборства"
+        option
+        selected={teamType === 4}
+        onPress={() => selectTeamType(4)}
+      />
     </View>
   );
 };

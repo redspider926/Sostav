@@ -8,60 +8,46 @@ import * as sizes from 'utils/sizes';
 import * as images from 'utils/images';
 import * as colors from 'utils/colors';
 
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 const Index = props => {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const userId = props.auth.user.id;
 
-  const data = [
-    {
-      id: '1',
-      avatar: images.images.team,
-      name: 'ЦСКА Москва',
-      accepted: true,
-    },
-    {
-      id: '2',
-      avatar: images.images.team,
-      name: 'ЦСКА Москва',
-      accepted: true,
-    },
-    {
-      id: '3',
-      avatar: images.images.team,
-      name: 'ЦСКА Москва',
-      accepted: true,
-    },
-  ];
   return (
     <View style={styles.root}>
       <Header title="Чат" leftButtonSource={images.icons.left_arrow} />
       <Space height={20} />
-      <Text fontSize={sizes.font.middle_b}>
+      {/* <Text fontSize={sizes.font.middle_b}>
         Чат появится, когда вы создадите команду
-      </Text>
+      </Text> */}
       <SwipeListView
         disableRightSwipe
-        data={data}
-        renderItem={(item, rowMap) => (
+        data={props.teams.filter(team => team.users[userId].accepted === true)}
+        renderItem={({item}) => (
           <TeamListItem
-            onPress={() => props.navigation.navigate('MessageScreen')}
-            avatar={item.item.avatar}
-            name={item.item.name}
-            accepted={item.item.accepted}
+            onPress={() =>
+              props.navigation.navigate('MessageScreen', {team: item})
+            }
+            avatar={{uri: item.avatar}}
+            name={item.name}
           />
         )}
-        renderHiddenItem={(item, rowMap) => {
-          return (
-            item.item.accepted && (
-              <View style={styles.hiddenItem}>
-                <TouchableOpacity
-                  style={styles.hiddenButton}
-                  onPress={() => setIsModalVisible(true)}>
-                  <Text fontColor={colors.white}>Удалить</Text>
-                </TouchableOpacity>
-              </View>
-            )
-          );
-        }}
+        // renderHiddenItem={({item}) => {
+        //   return (
+        //     item.users[userId].role === 0 && (
+        //       <View style={styles.hiddenItem}>
+        //         <TouchableOpacity
+        //           style={styles.hiddenButton}
+        //           onPress={() => setIsModalVisible(true)}>
+        //           <Text fontColor={colors.white}>Удалить</Text>
+        //         </TouchableOpacity>
+        //       </View>
+        //     )
+        //   );
+        // }}
         rightOpenValue={-100}
       />
       <Modal
@@ -146,4 +132,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+const mapStateToProps = state => {
+  return {auth: state.auth, teams: state.teams};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

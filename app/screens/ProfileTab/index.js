@@ -14,7 +14,12 @@ import * as sizes from 'utils/sizes';
 import * as images from 'utils/images';
 import * as colors from 'utils/colors';
 
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 const Index = props => {
+  const user = props.auth.user;
   return (
     <View style={styles.root}>
       <Header title="Мой профиль" />
@@ -22,13 +27,13 @@ const Index = props => {
       <TouchableOpacity
         style={styles.profile}
         onPress={() => {
-          props.navigation.navigate('ViewMyProfileScreen');
+          props.navigation.navigate('ViewMyProfileScreen', {user: user});
         }}>
-        <Image circle source={images.images.team} width={50} height={50} />
+        <Image circle source={{uri: user.avatar}} width={50} height={50} />
         <Space width={10} />
         <View>
           <Text bold fontSize={sizes.font.large_a}>
-            Василий Забивакин
+            {user.name}
           </Text>
         </View>
       </TouchableOpacity>
@@ -61,4 +66,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+const mapStateToProps = state => {
+  return {auth: state.auth};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

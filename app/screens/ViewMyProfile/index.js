@@ -15,6 +15,24 @@ import * as images from 'utils/images';
 import * as colors from 'utils/colors';
 
 const Index = props => {
+  const user = props.route.params.user;
+
+  const changeToMaskedDate = date => {
+    var yyyy = date.getFullYear().toString();
+    var mm = (date.getMonth() + 1).toString();
+    var dd = date.getDate().toString();
+    var mmChars = mm.split('');
+    var ddChars = dd.split('');
+
+    return (
+      (mmChars[1] ? mm : '0' + mmChars[0]) +
+      '.' +
+      (ddChars[1] ? dd : '0' + ddChars[0]) +
+      '.' +
+      yyyy
+    );
+  };
+
   return (
     <View style={styles.root}>
       <Header
@@ -23,7 +41,7 @@ const Index = props => {
         rightButtonSource={images.icons.edit}
         onLeftButtonPress={() => props.navigation.goBack()}
         onRightButtonPress={() =>
-          props.navigation.navigate('EditMyProfileScreen')
+          props.navigation.navigate('EditMyProfileScreen', {user: user})
         }
       />
       <Space height={20} />
@@ -32,7 +50,7 @@ const Index = props => {
         <Space width={20} />
         <View>
           <Text bold fontSize={sizes.font.large_a}>
-            Василий Забивакин
+            {user.firstName + ' ' + user.lastName}
           </Text>
         </View>
       </View>
@@ -40,17 +58,17 @@ const Index = props => {
       <Text fontSize={sizes.font.middle_a} fontColor={colors.darkBlue} bold>
         E-Mail
       </Text>
-      <Text>mail@gmail.com</Text>
+      <Text>{user.email}</Text>
       <Space height={20} />
       <Text fontSize={sizes.font.middle_a} fontColor={colors.darkBlue} bold>
         Телефон
       </Text>
-      <Text>+7 (123) 123-12-12</Text>
+      <Text>{user.phoneNumber}</Text>
       <Space height={20} />
       <Text fontSize={sizes.font.middle_a} fontColor={colors.darkBlue} bold>
         День рождения
       </Text>
-      <Text>10.10.2019</Text>
+      <Text>{changeToMaskedDate(user.birthday)}</Text>
     </View>
   );
 };

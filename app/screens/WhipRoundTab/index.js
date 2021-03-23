@@ -24,7 +24,9 @@ const Index = props => {
         keyExtractor={(item, index) => item.id}
         renderItem={({item}) => (
           <TeamListItem
-            onPress={() => props.navigation.navigate('TeamWhipRoundsScreen')}
+            onPress={() =>
+              props.navigation.navigate('TeamWhipRoundsScreen', {team: item})
+            }
             avatar={{uri: item.avatar}}
             name={item.name}
           />

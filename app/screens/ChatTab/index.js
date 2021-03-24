@@ -29,10 +29,11 @@ const Index = props => {
         renderItem={({item}) => (
           <TeamListItem
             onPress={() =>
-              props.navigation.navigate('MessageScreen', {team: item})
+              props.navigation.navigate('MessageScreen', {teamId: item.id})
             }
             avatar={{uri: item.avatar}}
             name={item.name}
+            chat
           />
         )}
         // renderHiddenItem={({item}) => {
@@ -86,9 +87,9 @@ const Index = props => {
           </View>
         </View>
       </Modal>
-      <TouchableOpacity style={styles.addButton}>
+      {/* <TouchableOpacity style={styles.addButton}>
         <Image source={images.icons.plus} icon tintColor={colors.white} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

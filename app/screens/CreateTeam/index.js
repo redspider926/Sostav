@@ -11,7 +11,6 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import auth from '@react-native-firebase/auth';
 
 import uuid from 'react-native-uuid';
 
@@ -64,7 +63,7 @@ const Index = props => {
   //loading
   const [loadingState, setLoadingState] = React.useState(false);
 
-  const registerTeam = async () => {
+  const createTeam = async () => {
     let errorMessage = '';
 
     if (myTeamTypeText === null) {
@@ -103,6 +102,7 @@ const Index = props => {
       type: myTeamTypeNumber,
       users: {
         [userId]: {
+          id: userId,
           accepted: true,
           role: myRoleNumber,
         },
@@ -111,9 +111,10 @@ const Index = props => {
 
     await firestore()
       .collection('Teams')
-      .add(team)
+      .doc(teamId)
+      .set(team)
       .then(() => {
-        console.log('Team was successfully registered!');
+        console.log('Team was successfully created!');
         props.navigation.navigate('TabNav');
       })
       .catch(() => {
@@ -228,7 +229,7 @@ const Index = props => {
       </ScrollView>
 
       <Space flex={1} />
-      <Button caption="Создать команду" onPress={registerTeam} />
+      <Button caption="Создать команду" onPress={createTeam} />
       <Modal
         useNativeDriverForBackdrop
         isVisible={isModalVisible}

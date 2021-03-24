@@ -20,26 +20,28 @@ import * as sizes from 'utils/sizes';
 import * as images from 'utils/images';
 import * as colors from 'utils/colors';
 
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 const Index = props => {
-  const data = [
-    {id: '1', name: 'Пётр Отбивалкин', avatar: images.images.team},
-    {id: '2', name: 'Пётр Отбивалкин', avatar: images.images.team},
-    {id: '3', name: 'Пётр Отбивалкин', avatar: images.images.team},
-    {id: '4', name: 'Пётр Отбивалкин', avatar: images.images.team},
-    {id: '5', name: 'Пётр Отбивалкин', avatar: images.images.team},
-  ];
   const [addedMoney, setAddedMoney] = React.useState('');
   const refRBSheet = React.useRef();
   const refRBSheet_1 = React.useRef();
 
-  const {team} = props.route.params;
+  const userId = props.auth.user.id;
+  const {teamId, whipRoundId} = props.route.params;
+  const team = props.teams.find(_team => _team.id === teamId);
+  const whipRound = props.whipRounds.find(
+    _whipRound => _whipRound.id === whipRoundId,
+  );
 
   return (
     <View style={styles.root}>
       <Header
         title="Сбор"
         leftButtonSource={images.icons.left_arrow}
-        rightButtonSource={images.icons.more}
+        rightButtonSource={team.users[userId].role < 4 && images.icons.more}
         onLeftButtonPress={() => props.navigation.goBack()}
         onRightButtonPress={() => {
           refRBSheet_1.current.open();
@@ -51,10 +53,7 @@ const Index = props => {
           Цель
         </Text>
         <Space height={20} />
-        <Text>
-          С другой стороны консультация с широким активом позволяет оценить
-          значение соответствующий условий активизации.
-        </Text>
+        <Text>{whipRound.purpose}</Text>
 
         <Space height={40} />
         <View style={styles.group1}>
@@ -77,13 +76,13 @@ const Index = props => {
             <Text fontSize={sizes.font.middle_b} bold>
               Сумма
             </Text>
-            <Text>32 000 руб.</Text>
+            <Text>{whipRound.amount} руб.</Text>
           </View>
           <View style={{flex: 1}}>
             <Text fontSize={sizes.font.middle_b} bold>
               Дедлайн
             </Text>
-            <Text>22.06.20</Text>
+            <Text>{whipRound.whipRoundDate.toString()}</Text>
           </View>
         </View>
         <Space height={40} />
@@ -94,7 +93,7 @@ const Index = props => {
 
         <FlatList
           horizontal={true}
-          data={team.users}
+          data={whipRound.users}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => item.id}
           renderItem={item => {
@@ -112,26 +111,27 @@ const Index = props => {
           Описание
         </Text>
         <Space height={10} />
-        <Text>
-          Значимость этих проблем настолько очевидна, что начало повседневной
-          работы по формированию позиции влечет за собой процесс внедрения и
-          модернизации системы обучения кадров, соответствует насущным
-          потребностям.
-        </Text>
+        <Text>{whipRound.description}</Text>
         <Space height={40} />
-        <View style={{alignSelf: 'flex-end'}}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              refRBSheet.current.open();
-            }}>
-            <Text bold>Внести</Text>
-            <Space width={10} />
-            <View style={styles.buttonPlusPart}>
-              <Image source={images.icons.plus} icon tintColor={colors.white} />
-            </View>
-          </TouchableOpacity>
-        </View>
+        {team.users[userId].role < 4 && (
+          <View style={{alignSelf: 'flex-end'}}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                refRBSheet.current.open();
+              }}>
+              <Text bold>Внести</Text>
+              <Space width={10} />
+              <View style={styles.buttonPlusPart}>
+                <Image
+                  source={images.icons.plus}
+                  icon
+                  tintColor={colors.white}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
 
         <Space height={70} />
       </ScrollView>
@@ -295,4 +295,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+const mapStateToProps = state => {
+  return {auth: state.auth, teams: state.teams, whipRounds: state.whipRounds};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

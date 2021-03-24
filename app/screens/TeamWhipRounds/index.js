@@ -9,35 +9,48 @@ import Modal from 'react-native-modal';
 
 import {SwipeListView} from 'react-native-swipe-list-view';
 
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 const Index = props => {
-  const {team} = props.route.params;
+  const {teamId} = props.route.params;
+  const team = props.teams.find(_team => _team.id === teamId);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const data = [
-    {
-      id: '1',
-      purpose: 'Игра за 1/2 полуфинала',
-      description:
-        'С другой стороны консультация с широким активом позволяет оценить значение....',
-      date: '22.06.2020',
-      amount: 3000,
-    },
-    {
-      id: '2',
-      purpose: 'Игра за 1/2 полуфинала',
-      description:
-        'С другой стороны консультация с широким активом позволяет оценить значение....',
-      date: '22.06.2020',
-      amount: 2000,
-    },
-    {
-      id: '3',
-      purpose: 'Игра за 1/2 полуфинала',
-      description:
-        'С другой стороны консультация с широким активом позволяет оценить значение....',
-      date: '22.06.2020',
-      amount: 2500,
-    },
-  ];
+  const [filter, setFilter] = React.useState('uncomplete');
+
+  const userId = props.auth.user.id;
+
+  const completedWhipRounds = props.whipRounds.filter(
+    whipRound =>
+      whipRound.team === teamId &&
+      whipRound.completed === true &&
+      (team.users[userId].role < 4 || whipRound.users[userId]),
+  );
+
+  const uncompletedWhipRounds = props.whipRounds.filter(
+    whipRound =>
+      whipRound.team === teamId &&
+      whipRound.completed === false &&
+      (team.users[userId].role < 4 || whipRound.users[userId]),
+  );
+
+  const changeToMaskedDate = date => {
+    var yyyy = date.getFullYear().toString();
+    var mm = (date.getMonth() + 1).toString();
+    var dd = date.getDate().toString();
+    var mmChars = mm.split('');
+    var ddChars = dd.split('');
+
+    return (
+      (mmChars[1] ? mm : '0' + mmChars[0]) +
+      '.' +
+      (ddChars[1] ? dd : '0' + ddChars[0]) +
+      '.' +
+      yyyy
+    );
+  };
+
   return (
     <View style={styles.root}>
       <Header
@@ -52,39 +65,65 @@ const Index = props => {
         Создайте свою спортивную команду!
       </Text> */}
       <View style={styles.infoGroup}>
-        <View style={styles.info}>
+        <TouchableOpacity
+          style={styles.info}
+          onPress={() => setFilter('uncomplete')}>
           <Text>Текущие</Text>
           <Space width={15} />
-          <View style={[styles.infoNumber, {backgroundColor: colors.main}]}>
-            <Text fontColor={colors.white}>5</Text>
+          <View
+            style={[
+              styles.infoNumber,
+              {
+                backgroundColor:
+                  filter === 'uncomplete' ? colors.main : colors.grey,
+              },
+            ]}>
+            <Text fontColor={colors.white}>{uncompletedWhipRounds.length}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
         <Space width={40} />
-        <View style={styles.info}>
+        <TouchableOpacity
+          style={styles.info}
+          onPress={() => setFilter('complete')}>
           <Text>Архивные</Text>
           <Space width={15} />
-          <View style={[styles.infoNumber, {backgroundColor: colors.grey}]}>
-            <Text fontColor={colors.white}>2</Text>
+          <View
+            style={[
+              styles.infoNumber,
+              {
+                backgroundColor:
+                  filter === 'complete' ? colors.main : colors.grey,
+              },
+            ]}>
+            <Text fontColor={colors.white}>{completedWhipRounds.length}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
       <Space height={10} />
       <SwipeListView
         showsVerticalScrollIndicator={false}
         disableRightSwipe
-        data={data}
-        renderItem={(item, rowMap) => (
+        data={
+          filter === 'uncomplete' ? uncompletedWhipRounds : completedWhipRounds
+        }
+        keyExtractor={(item, index) => item.id}
+        renderItem={({item}) => (
           <WhipRound
-            onPress={() => props.navigation.navigate('OneWhipRoundScreen')}
-            purpose={item.item.purpose}
-            description={item.item.description}
-            date={item.item.date}
-            amount={item.item.amount}
+            onPress={() =>
+              props.navigation.navigate('OneWhipRoundScreen', {
+                teamId: teamId,
+                whipRoundId: item.id,
+              })
+            }
+            purpose={item.purpose}
+            description={item.description}
+            date={changeToMaskedDate(new Date(item.whipRoundDate))}
+            amount={item.amount}
           />
         )}
-        renderHiddenItem={(item, rowMap) => {
+        renderHiddenItem={({item}) => {
           return (
-            item.item.type !== 3 && (
+            team.users[userId].role < 4 && (
               <View style={styles.hiddenItem}>
                 <TouchableOpacity
                   style={styles.button1}
@@ -140,13 +179,15 @@ const Index = props => {
         </View>
       </Modal>
 
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() =>
-          props.navigation.navigate('CreateWhipRoundScreen', {team: team})
-        }>
-        <Image source={images.icons.plus} icon tintColor={colors.white} />
-      </TouchableOpacity>
+      {team.users[userId].role < 4 && (
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() =>
+            props.navigation.navigate('CreateWhipRoundScreen', {teamId: teamId})
+          }>
+          <Image source={images.icons.plus} icon tintColor={colors.white} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -218,4 +259,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+const mapStateToProps = state => {
+  return {auth: state.auth, whipRounds: state.whipRounds, teams: state.teams};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

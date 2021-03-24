@@ -24,7 +24,9 @@ const Index = props => {
         renderItem={({item}) => (
           <TeamListItem
             onPress={() =>
-              props.navigation.navigate('TeamWhipRoundsScreen', {team: item})
+              props.navigation.navigate('TeamWhipRoundsScreen', {
+                teamId: item.id,
+              })
             }
             avatar={{uri: item.avatar}}
             name={item.name}

@@ -26,21 +26,18 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 const Index = props => {
-  const team = props.route.params.team;
+  const userId = props.auth.user.id;
+  const {teamId} = props.route.params;
+  const team = props.teams.find(_team => _team.id === teamId);
 
-  const data = [
-    {id: '1', name: 'Пётр Отбивалкин', avatar: images.images.team},
-    {id: '2', name: 'Пётр Отбивалкин', avatar: images.images.team},
-    {id: '3', name: 'Пётр Отбивалкин', avatar: images.images.team},
-    {id: '4', name: 'Пётр Отбивалкин', avatar: images.images.team},
-    {id: '5', name: 'Пётр Отбивалкин', avatar: images.images.team},
-  ];
   return (
     <View style={styles.root}>
       <Header
         title="Команда"
-        leftButtonSource={images.icons.left_arrow}
-        rightButtonSource={images.icons.more}
+        leftButtonSource={
+          team.users[userId].role < 3 && images.icons.left_arrow
+        }
+        rightButtonSource={team.users[userId].role < 3 && images.icons.more}
         onLeftButtonPress={() => props.navigation.goBack()}
         onRightButtonPress={() => {}}
       />
@@ -119,42 +116,44 @@ const Index = props => {
 
         <FlatList
           horizontal={true}
-          data={data}
+          data={[...Object.values(team.users), {id: 'new'}]}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => item.id}
-          renderItem={item => {
-            return item.index < data.length - 1 ? (
+          renderItem={({item, index}) => {
+            return index < Object.values(team.users).length ? (
               <TeammateItem
-                avatar={item.item.avatar}
-                name={item.item.name}
+                avatar={item.avatar}
+                name={item.name}
                 onPress={() => {}}
               />
             ) : (
-              <TouchableOpacity
-                onPress={() => props.navigation.navigate('AddTeammateScreen')}
-                style={{width: 56}}>
-                <View
-                  style={{
-                    size: 56,
-                    height: 56,
-                    borderRadius: 56,
-                    backgroundColor: colors.main,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Image
-                    source={images.icons.plus}
-                    icon
-                    tintColor={colors.white}
-                  />
-                </View>
-                <Text
-                  center
-                  fontColor={colors.main}
-                  fontSize={sizes.font.small_a}>
-                  Add player
-                </Text>
-              </TouchableOpacity>
+              team.users[userId].role < 3 && (
+                <TouchableOpacity
+                  onPress={() => props.navigation.navigate('AddTeammateScreen')}
+                  style={{width: 56}}>
+                  <View
+                    style={{
+                      size: 56,
+                      height: 56,
+                      borderRadius: 56,
+                      backgroundColor: colors.main,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Image
+                      source={images.icons.plus}
+                      icon
+                      tintColor={colors.white}
+                    />
+                  </View>
+                  <Text
+                    center
+                    fontColor={colors.main}
+                    fontSize={sizes.font.small_a}>
+                    Add player
+                  </Text>
+                </TouchableOpacity>
+              )
             );
           }}
         />

@@ -17,6 +17,7 @@ import {bindActionCreators} from 'redux';
 const Index = props => {
   const {teamId} = props.route.params;
   const team = props.teams.find(_team => _team.id === teamId);
+
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [deleteWhipRoundId, setDeleteWhipRoundId] = React.useState('');
   const [filter, setFilter] = React.useState('uncomplete');

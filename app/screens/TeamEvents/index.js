@@ -9,42 +9,17 @@ import Modal from 'react-native-modal';
 
 import {SwipeListView} from 'react-native-swipe-list-view';
 
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 const Index = props => {
-  const [code, setCode] = React.useState('');
+  const {teamId} = props.route.params;
+  const userId = props.auth.user.id;
+  const team = props.teams.find(_team => _team.id === teamId);
+
   const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const refRBSheet = React.useRef();
-  const data = [
-    {
-      id: '1',
-      eventName: 'Игра за 1/2 полуфинала',
-      eventOpponent: 'ЦСКА Москва',
-      description:
-        'С другой стороны консультация с широким активом позволяет оценить значение....',
-      date: '22.06.2020',
-      startAndEndTime: '18:00-20:00',
-      type: 1,
-    },
-    {
-      id: '2',
-      eventName: 'Игра за 1/2 полуфинала',
-      eventOpponent: 'ЦСКА Москва',
-      description:
-        'С другой стороны консультация с широким активом позволяет оценить значение....',
-      date: '22.06.2020',
-      startAndEndTime: '18:00-20:00',
-      type: 2,
-    },
-    {
-      id: '3',
-      eventName: 'Игра за 1/2 полуфинала',
-      eventOpponent: 'ЦСКА Москва',
-      description:
-        'С другой стороны консультация с широким активом позволяет оценить значение....',
-      date: '22.06.2020',
-      startAndEndTime: '18:00-20:00',
-      type: 3,
-    },
-  ];
+
   return (
     <View style={styles.root}>
       <Header
@@ -79,21 +54,26 @@ const Index = props => {
       <SwipeListView
         showsVerticalScrollIndicator={false}
         disableRightSwipe
-        data={data}
-        renderItem={(item, rowMap) => (
+        data={props.events}
+        renderItem={({item}) => (
           <Event
-            onPress={() => props.navigation.navigate('OneEventScreen')}
-            eventName={item.item.eventName}
-            eventOpponent={item.item.eventOpponent}
-            description={item.item.description}
-            date={item.item.date}
-            startAndEndTime={item.item.startAndEndTime}
-            type={item.item.type}
+            onPress={() =>
+              props.navigation.navigate('OneEventScreen', {
+                teamId: teamId,
+                eventId: item.id,
+              })
+            }
+            eventName={item.eventName}
+            eventOpponent={item.eventOpponent}
+            description={item.description}
+            date={item.date}
+            startAndEndTime={item.startAndEndTime}
+            type={item.type}
           />
         )}
-        renderHiddenItem={(item, rowMap) => {
+        renderHiddenItem={({item}) => {
           return (
-            item.item.type !== 3 && (
+            item.type !== 3 && (
               <View style={styles.hiddenItem}>
                 <TouchableOpacity
                   style={styles.button1}
@@ -149,11 +129,15 @@ const Index = props => {
         </View>
       </Modal>
 
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => props.navigation.navigate('CreateEventScreen')}>
-        <Image source={images.icons.plus} icon tintColor={colors.white} />
-      </TouchableOpacity>
+      {team.users[userId].role < 4 && (
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() =>
+            props.navigation.navigate('CreateEventScreen', {teamId: teamId})
+          }>
+          <Image source={images.icons.plus} icon tintColor={colors.white} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -225,4 +209,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Index;
+const mapStateToProps = state => {
+  return {auth: state.auth, teams: state.teams, events: state.events};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

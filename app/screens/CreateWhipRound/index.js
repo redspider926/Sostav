@@ -34,7 +34,6 @@ import {bindActionCreators} from 'redux';
 
 const Index = props => {
   const {teamId} = props.route.params;
-  const userId = props.auth.user.id;
   const team = props.teams.find(_team => _team.id === teamId);
 
   const [purpose, setPurpose] = React.useState('');

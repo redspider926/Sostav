@@ -61,7 +61,7 @@ const Index = props => {
         whipRoundsSubscribe();
       };
     }
-  }, []);
+  }, [props.teams]);
 
   const getDataOnce = async () => {
     await firestore()

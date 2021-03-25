@@ -119,7 +119,7 @@ const Index = props => {
           props.navigation.navigate('TabNav');
         },
         error => {
-          console.log('error_createTeam', error);
+          props.navigation.navigate('ErrorScreen', {error: 'NETWORK_ERROR'});
         },
       );
 

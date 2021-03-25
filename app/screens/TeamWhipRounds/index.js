@@ -104,7 +104,7 @@ const Index = props => {
               styles.infoNumber,
               {
                 backgroundColor:
-                  filter === 'uncomplete' ? colors.main : colors.grey,
+                  filter === 'uncomplete' ? colors.main : colors.darkGray,
               },
             ]}>
             <Text fontColor={colors.white}>{uncompletedWhipRounds.length}</Text>
@@ -121,7 +121,7 @@ const Index = props => {
               styles.infoNumber,
               {
                 backgroundColor:
-                  filter === 'complete' ? colors.main : colors.grey,
+                  filter === 'complete' ? colors.main : colors.darkGray,
               },
             ]}>
             <Text fontColor={colors.white}>{completedWhipRounds.length}</Text>
@@ -163,7 +163,9 @@ const Index = props => {
                       completeWhipRound(item);
                     }
                   }}>
-                  <Text fontColor={colors.white}>Завершить</Text>
+                  <Text fontColor={colors.white}>
+                    {item.completed ? 'Repair' : 'Завершить'}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.button2}

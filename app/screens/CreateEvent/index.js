@@ -27,10 +27,16 @@ const Index = props => {
   const [eventDate, setEventDate] = React.useState(new Date());
   const [eventStartTime, setEventStartTime] = React.useState(new Date());
   const [eventEndTime, setEventEndTime] = React.useState(new Date());
+  const [description, setDescription] = React.useState('');
+  const [place, setPlace] = React.useState('');
+  const [users, setUsers] = React.useState([]);
 
   const [showDatePicker, setShowDatePicker] = React.useState(false);
   const [showStartTimePicker, setShowStartTimePicker] = React.useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = React.useState(false);
+
+  //loading
+  const [loadingState, setLoadingState] = React.useState(false);
 
   const data = [
     {id: '1', name: 'Пётр Отбивалкин', avatar: images.images.team},
@@ -138,8 +144,8 @@ const Index = props => {
         editable
         title="Комментарий"
         placeholder="Описание события"
-        onChangeText={text => setName(text)}
-        value={name}
+        onChangeText={text => setDescription(text)}
+        value={description}
       />
       <Space height={40} />
       <Text fontSize={sizes.font.large_a} fontColor={colors.darkBlue} bold>
@@ -151,8 +157,8 @@ const Index = props => {
         editable
         title="Введите адрес места"
         placeholder="Введите адрес места"
-        onChangeText={text => setName(text)}
-        value={name}
+        onChangeText={text => setPlace(text)}
+        value={place}
       />
       <Space height={40} />
       <Text fontSize={sizes.font.large_a} fontColor={colors.darkBlue} bold>

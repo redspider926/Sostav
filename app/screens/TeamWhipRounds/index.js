@@ -8,6 +8,7 @@ import themeStyle from 'utils/style';
 import Modal from 'react-native-modal';
 
 import {SwipeListView} from 'react-native-swipe-list-view';
+import firestore from '@react-native-firebase/firestore';
 
 import {AuthActions} from 'actions';
 import {connect} from 'react-redux';
@@ -17,6 +18,7 @@ const Index = props => {
   const {teamId} = props.route.params;
   const team = props.teams.find(_team => _team.id === teamId);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [deleteWhipRoundId, setDeleteWhipRoundId] = React.useState('');
   const [filter, setFilter] = React.useState('uncomplete');
 
   const userId = props.auth.user.id;
@@ -49,6 +51,33 @@ const Index = props => {
       '.' +
       yyyy
     );
+  };
+
+  const completeWhipRound = whipRound => {
+    firestore()
+      .collection('WhipRounds')
+      .doc(whipRound.id)
+      .update({...whipRound, completed: true})
+      .then(() => {})
+      .catch(() => {});
+  };
+
+  const deleteWhipRound = whipRoundId => {
+    firestore()
+      .collection('WhipRounds')
+      .doc(whipRoundId)
+      .delete()
+      .then(() => {})
+      .catch(() => {});
+  };
+
+  const repairWhipRound = whipRound => {
+    firestore()
+      .collection('WhipRounds')
+      .doc(whipRound.id)
+      .update({...whipRound, completed: false})
+      .then(() => {})
+      .catch(() => {});
   };
 
   return (
@@ -127,12 +156,21 @@ const Index = props => {
               <View style={styles.hiddenItem}>
                 <TouchableOpacity
                   style={styles.button1}
-                  onPress={() => setIsModalVisible(true)}>
+                  onPress={() => {
+                    if (item.completed) {
+                      repairWhipRound(item);
+                    } else {
+                      completeWhipRound(item);
+                    }
+                  }}>
                   <Text fontColor={colors.white}>Завершить</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.button2}
-                  onPress={() => setIsModalVisible(true)}>
+                  onPress={() => {
+                    setIsModalVisible(true);
+                    setDeleteWhipRoundId(item.id);
+                  }}>
                   <Text fontColor={colors.white}>Удалить</Text>
                 </TouchableOpacity>
               </View>
@@ -152,27 +190,32 @@ const Index = props => {
               fontSize={sizes.font.large_a}
               fontColor={colors.darkBlue}
               bold>
-              Выберите место
+              Delete
             </Text>
             <Text fontSize={sizes.font.middle_b} fontColor={colors.darkGray}>
-              Примите приглашение в событие от соперника
+              Do you want to delete?
             </Text>
             <Space flex={1} />
             <View style={themeStyle.modalButtonGroup}>
               <TouchableOpacity
+                onPress={() => setIsModalVisible(false)}
                 style={[
                   themeStyle.modalButton,
                   {borderColor: colors.main, borderWidth: 1},
                 ]}>
-                <Text fontColor={colors.main}>Создать событие</Text>
+                <Text fontColor={colors.main}>Cancel</Text>
               </TouchableOpacity>
               <Space width={sizes.dimension.screen.padding} />
               <TouchableOpacity
+                onPress={() => {
+                  deleteWhipRound(deleteWhipRoundId);
+                  setIsModalVisible(false);
+                }}
                 style={[
                   themeStyle.modalButton,
                   {backgroundColor: colors.main},
                 ]}>
-                <Text fontColor={colors.white}>Создать событие</Text>
+                <Text fontColor={colors.white}>Delete</Text>
               </TouchableOpacity>
             </View>
           </View>

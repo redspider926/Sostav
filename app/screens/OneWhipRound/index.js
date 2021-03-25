@@ -60,12 +60,16 @@ const Index = props => {
           <Text fontSize={sizes.font.middle_b} bold>
             Цель
           </Text>
-          <Text>16 000 руб.</Text>
+          <Text>{whipRound.currentAmount} руб.</Text>
           <View style={styles.progress}>
             <View
               style={[
                 styles.progress,
-                {width: '70%', backgroundColor: colors.main},
+                {
+                  width:
+                    (whipRound.currentAmount / whipRound.amount) * 100 + '%',
+                  backgroundColor: colors.main,
+                },
               ]}
             />
           </View>
@@ -93,15 +97,16 @@ const Index = props => {
 
         <FlatList
           horizontal={true}
-          data={whipRound.users}
+          data={Object.values(team.users)}
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item, index) => item.id}
-          renderItem={item => {
+          renderItem={({item}) => {
             return (
               <TeammateItem
-                avatar={item.item.avatar}
-                name={item.item.name}
+                avatar={item.avatar}
+                name={item.name}
                 onPress={() => {}}
+                selected={whipRound.users.some(user => item.id === user)}
               />
             );
           }}
@@ -197,7 +202,10 @@ const Index = props => {
         <TouchableOpacity
           onPress={() => {
             refRBSheet_1.current.close();
-            props.navigation.navigate('EditWhipRoundScreen');
+            props.navigation.navigate('EditWhipRoundScreen', {
+              teamId: teamId,
+              whipRoundId: whipRoundId,
+            });
           }}>
           <Space height={15} />
           <Text fontSize={sizes.font.large_a} fontColor={colors.main}>

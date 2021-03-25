@@ -11,6 +11,7 @@ import {
 } from 'react-native-confirmation-code-field';
 
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import Toast from 'react-native-toast-message';
 
 import {AuthActions} from 'actions';
@@ -19,7 +20,6 @@ import {bindActionCreators} from 'redux';
 
 const Index = props => {
   const confirmation = props.auth.confirmation;
-
   const [code, setCode] = React.useState('');
   const [loadingState, setLoadingState] = React.useState(false);
   const CELL_COUNT = 6;
@@ -40,12 +40,26 @@ const Index = props => {
   async function confirmCode() {
     try {
       await confirmation.confirm(code);
+      const phoneNumber = auth().currentUser.phoneNumber;
+      console.log('phoneNumber', phoneNumber);
+      await firestore()
+        .collection('Users')
+        .where('phoneNumber', '==', phoneNumber)
+        .get()
+        .then(snapshot => {
+          console.log(
+            'snapshot data : ',
+            snapshot.docs.map(doc => doc.data()),
+          );
+          const result = snapshot.docs.map(doc => doc.data());
+          if (result.length > 0) {
+            props.authActions.login(result[0]);
+            props.navigation.navigate('TabNav');
+          } else {
+            props.navigation.navigate('RegisterScreen');
+          }
+        });
       setLoadingState(false);
-      if (auth().currentUser.displayName !== null) {
-        props.navigation.navigate('TabNav');
-      } else {
-        props.navigation.navigate('RegisterScreen');
-      }
     } catch (error) {
       setLoadingState(false);
       Toast.show({

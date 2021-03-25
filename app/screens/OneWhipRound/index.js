@@ -24,6 +24,8 @@ import {AuthActions} from 'actions';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
+import firestore from '@react-native-firebase/firestore';
+
 const Index = props => {
   const [addedMoney, setAddedMoney] = React.useState('');
   const refRBSheet = React.useRef();
@@ -35,6 +37,33 @@ const Index = props => {
   const whipRound = props.whipRounds.find(
     _whipRound => _whipRound.id === whipRoundId,
   );
+
+  const deleteWhipRound = () => {
+    firestore()
+      .collection('WhipRounds')
+      .doc(whipRoundId)
+      .delete()
+      .then(() => {})
+      .catch(() => {});
+  };
+
+  const completeWhipRound = () => {
+    firestore()
+      .collection('WhipRounds')
+      .doc(whipRoundId)
+      .update({...whipRound, completed: true})
+      .then(() => {})
+      .catch(() => {});
+  };
+
+  const repairWhipRound = () => {
+    firestore()
+      .collection('WhipRounds')
+      .doc(whipRoundId)
+      .update({...whipRound, completed: false})
+      .then(() => {})
+      .catch(() => {});
+  };
 
   return (
     <View style={styles.root}>
@@ -48,6 +77,10 @@ const Index = props => {
         }}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
+        <Space height={20} />
+        <View style={styles.completedState}>
+          <Text>Архив</Text>
+        </View>
         <Space height={20} />
         <Text fontSize={sizes.font.middle_b} bold>
           Цель
@@ -214,15 +247,29 @@ const Index = props => {
           <Space height={15} />
         </TouchableOpacity>
         <View style={styles.sheetSplitLine} />
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            refRBSheet_1.current.close();
+            if (whipRound.completed) {
+              repairWhipRound();
+            } else {
+              completeWhipRound();
+            }
+          }}>
           <Space height={15} />
           <Text fontSize={sizes.font.large_a} fontColor={colors.main}>
-            Завершить
+            {/* Завершить */}
+            {whipRound.completed ? 'Repair' : 'Завершить'}
           </Text>
           <Space height={15} />
         </TouchableOpacity>
         <View style={styles.sheetSplitLine} />
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={async () => {
+            refRBSheet_1.current.close();
+            await props.navigation.goBack();
+            deleteWhipRound();
+          }}>
           <Space height={15} />
           <Text fontSize={sizes.font.large_a} fontColor={colors.warning}>
             Удалить
@@ -300,6 +347,15 @@ const styles = StyleSheet.create({
     height: 1,
     width: '100%',
     backgroundColor: colors.grey,
+  },
+
+  completedState: {
+    height: 40,
+    width: 100,
+    backgroundColor: colors.grey,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

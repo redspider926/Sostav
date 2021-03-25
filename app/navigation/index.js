@@ -36,6 +36,7 @@ import StatisticWithOneTeamScreen from 'screens/StatisticWithOneTeam';
 import OneStatisticScreen from 'screens/OneStatistic';
 import LoadingScreen from 'screens/Loading';
 import NotificationSettingsScreen from 'screens/NotificationSettings';
+import ErrorScreen from 'screens/Error';
 
 //tab start
 import TeamTabScreen from 'screens/TeamTab';
@@ -54,14 +55,39 @@ import * as colors from 'utils/colors';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+import firestore from '@react-native-firebase/firestore';
+
+import {AuthActions} from 'actions';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
 const Navigation = props => {
+  function stopOfflineSupport() {
+    console.log('StopOfflineSupport');
+    firestore().settings({
+      persistence: false, // disable offline persistence
+    });
+  }
+
+  stopOfflineSupport();
+
   return (
     <>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="AuthenticationScreen">
-          <Stack.Screen
+        <Stack.Navigator
+          initialRouteName={
+            props.auth.isAuth === true
+              ? 'LoadingScreen'
+              : 'AuthenticationScreen'
+          }>
+          {/* <Stack.Screen
             name="ComponentTestScreen"
             component={ComponentTestScreen}
+            options={{headerShown: false, gestureEnabled: false}}
+          /> */}
+          <Stack.Screen
+            name="ErrorScreen"
+            component={ErrorScreen}
             options={{headerShown: false, gestureEnabled: false}}
           />
           <Stack.Screen
@@ -317,4 +343,14 @@ function TabNav() {
   );
 }
 
-export default Navigation;
+const mapStateToProps = state => {
+  return {auth: state.auth};
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authActions: bindActionCreators(AuthActions, dispatch),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation);

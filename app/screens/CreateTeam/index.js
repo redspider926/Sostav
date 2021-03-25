@@ -113,13 +113,15 @@ const Index = props => {
       .collection('Teams')
       .doc(teamId)
       .set(team)
-      .then(() => {
-        console.log('Team was successfully created!');
-        props.navigation.navigate('TabNav');
-      })
-      .catch(() => {
-        console.log('User register operation was failed!');
-      });
+      .then(
+        () => {
+          console.log('Team was successfully created!');
+          props.navigation.navigate('TabNav');
+        },
+        error => {
+          console.log('error_createTeam', error);
+        },
+      );
 
     setLoadingState(false);
   };
@@ -130,11 +132,17 @@ const Index = props => {
       'https://firebasestorage.googleapis.com/v0/b/sostav-64ab4.appspot.com/o/Default%2Fteam.jpg?alt=media&token=64bbb8d9-2796-4842-8f42-e7fdd24200ac';
     if (uri) {
       await imageRef
-        .putFile(uri)
-        .then(snapshot => {
-          avatar = imageRef.getDownloadURL();
+        .putFile(uri, {
+          cacheControl: 'no-store', // disable caching
         })
-        .catch(error => {});
+        .then(
+          snapshot => {
+            avatar = imageRef.getDownloadURL();
+          },
+          error => {
+            console.log('error_registerAvatar', error);
+          },
+        );
     }
 
     return avatar;

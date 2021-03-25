@@ -22,4 +22,5 @@ export const icons = {
 export const images = {
   logo: require('assets/images/logo.png'),
   team: require('assets/images/team.png'),
+  networkError: require('assets/images/networkError.png'),
 };

@@ -5,10 +5,6 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import rootReducer from '../reducers';
 
-/**
- * Redux Setting
- */
-
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,

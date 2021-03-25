@@ -129,13 +129,15 @@ const Index = props => {
       .collection('WhipRounds')
       .doc(whipRoundId)
       .set(whipRound)
-      .then(() => {
-        console.log('WhipRound was successfully created!');
-        props.navigation.goBack();
-      })
-      .catch(() => {
-        console.log('WhipRound create operation was failed!');
-      });
+      .then(
+        () => {
+          console.log('WhipRound was successfully created!');
+          props.navigation.goBack();
+        },
+        error => {
+          props.navigation.navigate('ErrorScreen', {error: 'NETWORK_ERROR'});
+        },
+      );
 
     setLoadingState(false);
   };

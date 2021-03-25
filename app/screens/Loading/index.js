@@ -14,15 +14,24 @@ import {bindActionCreators} from 'redux';
 const Index = props => {
   const userId = props.auth.user.id;
 
+  let networkError = false;
+
   React.useEffect(() => {
     getDataOnce();
 
     const teamsSubscribe = firestore()
       .collection('Teams')
       .where('users.' + userId + '.accepted', 'in', [true, false])
-      .onSnapshot(querySnapshot => {
-        props.teamsActions.getTeams(querySnapshot.docs.map(doc => doc.data()));
-      });
+      .onSnapshot(
+        querySnapshot => {
+          props.teamsActions.getTeams(
+            querySnapshot.docs.map(doc => doc.data()),
+          );
+        },
+        error => {
+          console.log('error_getTeamsRealTime:', error);
+        },
+      );
 
     return () => {
       teamsSubscribe();
@@ -38,25 +47,39 @@ const Index = props => {
           'in',
           props.teams.map(team => team.id),
         )
-        .onSnapshot(querySnapshot => {
-          props.whipRoundActions.getWhipRounds(
-            querySnapshot.docs.map(doc => doc.data()),
-          );
-        });
+        .onSnapshot(
+          querySnapshot => {
+            props.whipRoundActions.getWhipRounds(
+              querySnapshot.docs.map(doc => doc.data()),
+            );
+          },
+          error => {
+            console.log('error_getWhipRoundsRealTime:', error);
+          },
+        );
       return () => {
         whipRoundsSubscribe();
       };
     }
-  }, [props.teams]);
+  }, []);
 
   const getDataOnce = async () => {
     await firestore()
       .collection('Teams')
       .where('users.' + userId + '.accepted', 'in', [true, false])
-      .get()
-      .then(querySnapshot => {
-        props.teamsActions.getTeams(querySnapshot.docs.map(doc => doc.data()));
-      });
+      .get({
+        source: 'server',
+      })
+      .then(
+        result => {
+          props.teamsActions.getTeams(result.docs.map(doc => doc.data()));
+        },
+        error => {
+          networkError = true;
+          console.log('error_getTeams:', error);
+        },
+      );
+
     if (props.teams.length > 0) {
       await firestore()
         .collection('WhipRounds')
@@ -65,12 +88,18 @@ const Index = props => {
           'in',
           props.teams.map(team => team.id),
         )
-        .get()
-        .then(querySnapshot => {
-          props.whipRoundActions.getWhipRounds(
-            querySnapshot.docs.map(doc => doc.data()),
-          );
-        });
+        .get({source: 'server'})
+        .then(
+          result => {
+            props.whipRoundActions.getWhipRounds(
+              result.docs.map(doc => doc.data()),
+            );
+          },
+          error => {
+            networkError = true;
+            console.log('error_getWhipRounds:', error);
+          },
+        );
 
       await firestore()
         .collection('Events')
@@ -79,18 +108,29 @@ const Index = props => {
           'in',
           props.teams.map(team => team.id),
         )
-        .get()
-        .then(querySnapshot => {
-          props.eventActions.getEvents(
-            querySnapshot.docs.map(doc => doc.data()),
-          );
-        });
+        .get({source: 'server'})
+        .then(
+          result => {
+            props.eventActions.getEvents(result.docs.map(doc => doc.data()));
+          },
+          error => {
+            networkError = true;
+            console.log('error_getEvents:', error);
+          },
+        );
     }
-
-    props.navigation.navigate('TabNav');
+    if (networkError === false) {
+      props.navigation.navigate('TabNav');
+    } else {
+      props.navigation.navigate('ErrorScreen', {error: 'NETWORK_ERROR'});
+    }
   };
 
-  return <Loading />;
+  return (
+    <>
+      <Loading />
+    </>
+  );
 };
 
 const mapStateToProps = state => {

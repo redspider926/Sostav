@@ -6,7 +6,7 @@ import {
   Space,
   TeamListItem,
   Header,
-  Image,
+  Button,
   Text,
   Title,
   Statistic,

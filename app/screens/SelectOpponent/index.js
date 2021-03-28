@@ -7,12 +7,14 @@ import * as colors from 'utils/colors';
 
 const Index = props => {
   const [opponentTeamName, setOpponentTeamName] = React.useState('');
+
   const data = [
     {id: '1', name: 'Канадский стафф', avatar: images.images.team},
     {id: '2', name: 'Арсенал', avatar: images.images.team},
     {id: '3', name: 'Суприм', avatar: images.images.team},
     {id: '4', name: 'Зенит', avatar: images.images.team},
   ];
+
   return (
     <View style={styles.root}>
       <Header

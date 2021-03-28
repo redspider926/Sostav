@@ -19,6 +19,9 @@ const Index = props => {
   const team = props.teams.find(_team => _team.id === teamId);
 
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [filter, setFilter] = React.useState('uncomplete');
+  const completedEvents = [];
+  const uncompletedEvents = [];
 
   return (
     <View style={styles.root}>
@@ -34,27 +37,46 @@ const Index = props => {
         Создайте свою спортивную команду!
       </Text> */}
       <View style={styles.infoGroup}>
-        <View style={styles.info}>
+        <TouchableOpacity
+          style={styles.info}
+          onPress={() => setFilter('uncomplete')}>
           <Text>Текущие</Text>
           <Space width={15} />
-          <View style={[styles.infoNumber, {backgroundColor: colors.main}]}>
-            <Text fontColor={colors.white}>5</Text>
+          <View
+            style={[
+              styles.infoNumber,
+              {
+                backgroundColor:
+                  filter === 'uncomplete' ? colors.main : colors.darkGray,
+              },
+            ]}>
+            <Text fontColor={colors.white}>{uncompletedEvents.length}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
         <Space width={40} />
-        <View style={styles.info}>
+        <TouchableOpacity
+          style={styles.info}
+          onPress={() => setFilter('complete')}>
           <Text>Архивные</Text>
           <Space width={15} />
-          <View style={[styles.infoNumber, {backgroundColor: colors.grey}]}>
-            <Text fontColor={colors.white}>2</Text>
+          <View
+            style={[
+              styles.infoNumber,
+              {
+                backgroundColor:
+                  filter === 'complete' ? colors.main : colors.darkGray,
+              },
+            ]}>
+            <Text fontColor={colors.white}>{completedEvents.length}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
       <Space height={10} />
       <SwipeListView
         showsVerticalScrollIndicator={false}
         disableRightSwipe
         data={props.events}
+        keyExtractor={(item, index) => item.id}
         renderItem={({item}) => (
           <Event
             onPress={() =>
@@ -63,12 +85,11 @@ const Index = props => {
                 eventId: item.id,
               })
             }
-            eventName={item.eventName}
-            eventOpponent={item.eventOpponent}
+            name={item.name}
             description={item.description}
-            date={item.date}
-            startAndEndTime={item.startAndEndTime}
-            type={item.type}
+            eventDate={item.eventDate}
+            eventStartTime={item.eventStartTime}
+            eventEndTime={item.eventEndTime}
           />
         )}
         renderHiddenItem={({item}) => {

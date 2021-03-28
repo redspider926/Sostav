@@ -42,7 +42,7 @@ const Index = props => {
   const [eventEndTime, setEventEndTime] = React.useState(new Date());
   const [description, setDescription] = React.useState('');
   const [place, setPlace] = React.useState('');
-  const opponent = {};
+  const opponentId = '6767676';
   const [users, setUsers] = React.useState([]);
 
   const [showDatePicker, setShowDatePicker] = React.useState(false);
@@ -105,7 +105,7 @@ const Index = props => {
       errorMessage = 'You should choose at least one user for whipRound';
     }
 
-    if (!opponent) {
+    if (!opponentId) {
       errorMessage = 'You should choose opponent';
     }
 
@@ -140,7 +140,7 @@ const Index = props => {
       !eventEndTime ||
       !description ||
       !place ||
-      !opponent ||
+      !opponentId ||
       users.length === 0
     ) {
       Toast.show({
@@ -158,6 +158,14 @@ const Index = props => {
 
     const eventId = uuid.v1();
 
+    const usersForEvent = {};
+    users.forEach(user => {
+      usersForEvent[user] = 1;
+      if (user === props.auth.user.id) {
+        usersForEvent[user] = 2;
+      }
+    });
+
     const event = {
       id: eventId,
       name: name,
@@ -165,9 +173,18 @@ const Index = props => {
       eventStartTime: eventStartTime,
       eventEndTime: eventEndTime,
       description: description,
-      teams: {
-        [teamId]: [users],
-        [opponent.id]: [],
+      teams: [teamId, opponentId],
+      users: {
+        [teamId]: usersForEvent,
+        [opponentId]: {},
+      },
+      accepted: {
+        [teamId]: true,
+        [opponentId]: false,
+      },
+      result: {
+        [teamId]: 0,
+        [opponentId]: 0,
       },
       completed: false,
     };
@@ -373,6 +390,7 @@ const Index = props => {
           onChange={onChangeEndTime}
         />
       )}
+      {loadingState && <Loading />}
     </View>
   );
 };

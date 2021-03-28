@@ -57,8 +57,28 @@ const Index = props => {
             console.log('error_getWhipRoundsRealTime:', error);
           },
         );
+
+      const eventsSubscribe = firestore()
+        .collection('Events')
+        .where(
+          'teams',
+          'array-contains-any',
+          props.teams.map(team => team.id),
+        )
+        .onSnapshot(
+          querySnapshot => {
+            props.eventActions.getEvents(
+              querySnapshot.docs.map(doc => doc.data()),
+            );
+          },
+          error => {
+            console.log('error_getEventsRealTime:', error);
+          },
+        );
+
       return () => {
         whipRoundsSubscribe();
+        eventsSubscribe();
       };
     }
   }, [props.teams]);
@@ -104,8 +124,8 @@ const Index = props => {
       await firestore()
         .collection('Events')
         .where(
-          'team',
-          'in',
+          'teams',
+          'array-contains-any',
           props.teams.map(team => team.id),
         )
         .get({source: 'server'})
@@ -119,6 +139,7 @@ const Index = props => {
           },
         );
     }
+
     if (networkError === false) {
       props.navigation.navigate('TabNav');
     } else {

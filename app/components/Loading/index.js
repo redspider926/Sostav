@@ -1,30 +1,34 @@
 import React from 'react';
-import {View, StyleSheet, ActivityIndicator} from 'react-native';
-import Text from '../Text';
-import Space from '../Space';
+import {View, StyleSheet, Animated, Easing} from 'react-native';
+
 import Image from '../Image';
 
-import * as sizes from 'utils/sizes';
-import * as colors from 'utils/colors';
 import * as images from 'utils/images';
 
 const Index = props => {
-  const [degress, setDegress] = React.useState(0);
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setDegress(degress + 1);
-      console.log('degress', degress);
-    }, 1);
-    return function cleanup() {
-      clearInterval(timer);
-    };
-  }, [degress]);
+  const spinValue = new Animated.Value(0);
+  Animated.loop(
+    Animated.timing(spinValue, {
+      toValue: 1,
+      duration: 1000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }),
+  ).start();
+
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   return (
     <View style={styles.root}>
-      <View style={{transform: [{rotateZ: degress + 'deg'}]}}>
+      <Animated.View
+        style={{
+          transform: [{rotateZ: spin}],
+        }}>
         <Image source={images.images.logo} width={80} height={80} />
-      </View>
+      </Animated.View>
     </View>
   );
 };
@@ -38,7 +42,7 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF55',
+    backgroundColor: 'transparent',
   },
 });
 
